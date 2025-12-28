@@ -13,7 +13,7 @@
     <PackAsTool>False</PackAsTool>
     <AssemblyVersion></AssemblyVersion>
     <FileVersion></FileVersion>
-    <Version>1.0.5</Version>
+    <Version>1.0.6</Version>
     <Authors>Code Slasher</Authors>
     <Company>Code Slasher Incorporation</Company>
     <Description>Program for updating Zapret's lists</Description>

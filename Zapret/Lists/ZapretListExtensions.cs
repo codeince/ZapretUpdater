@@ -114,12 +114,11 @@ Got error: {e.Message}");
 
         public static void DownloadList(this IBaseList list)
         {
-            foreach (var url in list.Urls)
+            Parallel.ForEachAsync(list.Urls, async (url, _) =>
             {
                 Console.WriteLine($"[{list.FileName}] Downloading {url}...");
-                list.DownloadUrl(url).Wait();
-                
-            }
+                await list.DownloadUrl(url);
+            }).Wait();
             list.Set = [.. list.Set.DistinctSet()];
         }
 
@@ -127,7 +126,7 @@ Got error: {e.Message}");
         {
             if (list.Set.Count > 0)
             {
-                list.Set = [.. list.Set.SelectHosts()];
+                list.Set = [.. list.Set.SelectHosts(list.Id.StartsWith("domain"))];
                 list.Set.Add(Environment.NewLine);
                 list.Set = [.. list.Set.DistinctSet()];
 

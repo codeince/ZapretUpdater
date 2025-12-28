@@ -1,11 +1,13 @@
-﻿namespace ZapretUpdater.Zapret.Lists
+﻿using ZapretUpdater.Utils;
+
+namespace ZapretUpdater.Zapret.Lists
 {
     public interface IBaseList
     {
         public string Id { get; }
-        public HashSet<Uri> Urls { get; set; }
+        public ConcurrentHashSet<Uri> Urls { get; set; }
 
-        public HashSet<string> Set { get; set; }
+        public ConcurrentHashSet<string> Set { get; set; }
 
         public string FileName { get; }
     }

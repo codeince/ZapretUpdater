@@ -45,7 +45,7 @@ namespace ZapretUpdater.Zapret.FTS
             }
         }
 
-        public static HashSet<Uri> ReadCode(string code, bool inverted = false)
+        public static ConcurrentHashSet<Uri> ReadCode(string code, bool inverted = false)
         {
             return code.Split(Environment.NewLine)
                 .WhereNotEmpty()
@@ -54,7 +54,7 @@ namespace ZapretUpdater.Zapret.FTS
                 .Select(url => ReadLine(url, inverted))
                 .WhereNotEmpty()
                 .SelectUri()
-                .ToHashSet();
+                .ToConcurrentHashSet();
         }
 
 

@@ -1,4 +1,5 @@
-﻿using ZapretUpdater.Zapret.FTS;
+﻿using ZapretUpdater.Utils;
+using ZapretUpdater.Zapret.FTS;
 
 namespace ZapretUpdater.Zapret.Lists
 {
@@ -7,7 +8,7 @@ namespace ZapretUpdater.Zapret.Lists
         public string Id => "iplist_exclude";
         public string FileName => "ipset-exclude.txt";
 
-        private static HashSet<Uri> _urls = FTSInterpreter.ReadCode(
+        private static ConcurrentHashSet<Uri> _urls = FTSInterpreter.ReadCode(
 @"@github#sch-izo/shizapret+lists/ipset-exclude.txt
 @github#V3nilla/IPSets-For-Bypass-in-Russia+exclude.txt
 @github#Flowseal/zapret-discord-youtube+lists/ipset-exclude.txt
@@ -15,10 +16,10 @@ namespace ZapretUpdater.Zapret.Lists
 @github#remittor/zapret-openwrt+zapret/ipset/zapret-ip-exclude.txt+zap1
 @github#bol-van/zapret2+ipset/zapret-hosts-user-exclude.txt.default+master");
 
-        private static HashSet<string> set = [];
+        private static ConcurrentHashSet<string> set = [];
 
 
-        HashSet<Uri> IBaseList.Urls { get => _urls; set => _urls = value; }
-        HashSet<string> IBaseList.Set { get => set; set => set = value; }
+        ConcurrentHashSet<Uri> IBaseList.Urls { get => _urls; set => _urls = value; }
+        ConcurrentHashSet<string> IBaseList.Set { get => set; set => set = value; }
     }
 }
