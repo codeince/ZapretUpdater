@@ -6,6 +6,10 @@ namespace ZapretUpdater.Zapret.Lists
 {
     public static class ZapretListExtensions
     {
+        /// <summary>
+        /// Finds all extra sources in .sources file
+        /// </summary>
+        /// <param name="list">Current list</param>
         public static void FindExtraSources(this IBaseList list)
         {
             var extraFileName = list.FileName.Replace(".txt", ".sources");
@@ -22,7 +26,7 @@ namespace ZapretUpdater.Zapret.Lists
                 {
                     data = data.ReplaceLineEndings().Trim();
 
-                    var values = FTSInterpreter.ReadCode(data).Except(list.Urls).ToList();
+                    var values = FTSInterpreter.ReadCode(data).SelectUri().Except(list.Urls).ToList();
                     if (values.Count > 0)
                     {
                         Console.WriteLine($"[{extraFileName}] {values.Count} extra sources found.");
@@ -31,7 +35,7 @@ namespace ZapretUpdater.Zapret.Lists
                         list.Urls = [.. list.Urls.DistinctSet()];
                     }
 
-                    var AntiSources = FTSInterpreter.ReadCode(data, inverted: true);
+                    var AntiSources = FTSInterpreter.ReadCode(data, inverted: true).SelectUri().ToConcurrentHashSet();
                     if (AntiSources.Count > 0)
                     {
                         Console.WriteLine($"[!{extraFileName}] {AntiSources.Count} anti-sources found. Loading and downloading...");
@@ -46,6 +50,11 @@ namespace ZapretUpdater.Zapret.Lists
                 }
             }
         }
+
+        /// <summary>
+        /// Loads all ips and domains if files are exists
+        /// </summary>
+        /// <param name="list">Current list</param>
         public static void LoadList(this IBaseList list)
         {
             if (File.Exists(list.FileName))
@@ -62,6 +71,7 @@ namespace ZapretUpdater.Zapret.Lists
                     data = data.ReplaceLineEndings().Trim();
                     var values = data.Split(Environment.NewLine)
                         .WhereNotEmpty()
+                        .WhereNotComment()
                         .SelectTrim()
                         .ToList();
                     Console.WriteLine($"[{list.FileName}] {values.Count} values");
@@ -69,17 +79,23 @@ namespace ZapretUpdater.Zapret.Lists
                         list.Set.Add(url);
                 }
 
-                list.Set = [.. list.Set.DistinctSet()];
+                list.Set = [.. list.Set.Distinct()];
             }
         }
 
+        /// <summary>
+        /// Fetches all source's for ips or domains
+        /// </summary>
+        /// <param name="list">Current list</param>
+        /// <param name="url">Source url</param>
+        /// <returns></returns>
         public static async Task DownloadUrl(this IBaseList list, Uri url)
         {
-            using HttpClient webclient = new();
+            using HttpClient httpclient = new();
 
             try
             {
-                var data = await webclient.GetStringAsync(url);
+                var data = await httpclient.GetStringAsync(url);
 
                 if (string.IsNullOrWhiteSpace(data))
                 {
@@ -88,17 +104,21 @@ namespace ZapretUpdater.Zapret.Lists
                 else
                 {
                     data = data.ReplaceLineEndings().Trim();
-                    var values = data.Split(Environment.NewLine).Distinct().ToList();
-                    Console.WriteLine($"[{url.Host}] {values.Count} values");
+                    var values = data.Split(Environment.NewLine).SelectTrim().Distinct().ToList();
+
+                    if (values.Count == 0)
+                    {
+                        Console.WriteLine($"[WARNING] {url} returned no valid values.");
+                        return;
+                    }
+                    Console.WriteLine($"[{FTSInterpreter.ZipUri(url)}] {values.Count} values");
                     foreach (var value in values)
                         list.Set.Add(value);
                 }
             }
             catch (HttpRequestException e)
             {
-                Console.WriteLine($@"[ERROR] Host {url.Host} is unknown.
-Check your internet connection and try again.
-Got error: {e.Message}");
+                Console.WriteLine($"[ERROR] {e.Message}\nURL: {url}");
             }
             catch (InvalidOperationException e)
             {
@@ -112,23 +132,41 @@ Got error: {e.Message}");
             }
         }
 
+        /// <summary>
+        /// Fetches all list's sources for ips or domains
+        /// </summary>
+        /// <param name="list">Current list</param>
         public static void DownloadList(this IBaseList list)
         {
             Parallel.ForEachAsync(list.Urls, async (url, _) =>
             {
-                Console.WriteLine($"[{list.FileName}] Downloading {url}...");
                 await list.DownloadUrl(url);
             }).Wait();
-            list.Set = [.. list.Set.DistinctSet()];
+            list.Set = [.. list.Set.Distinct()];
         }
 
+        /// <summary>
+        /// Saves list to file
+        /// </summary>
+        /// <param name="list">Current list</param>
         public static void SaveToFile(this IBaseList list)
         {
             if (list.Set.Count > 0)
             {
-                list.Set = [.. list.Set.SelectHosts(list.Id.StartsWith("domain"))];
+                if (list.Id.StartsWith("domain"))
+                    list.Set = [.. list.Set.SelectHosts()];
+                else
+                    list.Set = [.. list.Set.Except(list.Set.SelectHosts())];
+
+                if (list.Id == new IpList().Id)
+                    list.Set.Remove("203.0.113.113/32");
+
                 list.Set.Add(Environment.NewLine);
-                list.Set = [.. list.Set.DistinctSet()];
+                list.Set = [.. list.Set
+                    .WhereNotEmpty()
+                    .WhereNotComment()
+                    .SelectTrim()
+                    .Distinct()];
 
                 File.WriteAllLines(list.FileName, list.Set.ToImmutableSortedSet());
             }

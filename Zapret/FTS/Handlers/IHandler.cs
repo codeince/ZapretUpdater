@@ -6,5 +6,8 @@
         int ArgumentCount { get; }
 
         Uri GetUri(string[] arguments);
+
+        bool CanZipUri(Uri uri);
+        string ZipUri(Uri uri);
     }
 }

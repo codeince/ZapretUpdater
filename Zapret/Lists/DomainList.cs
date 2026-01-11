@@ -8,13 +8,15 @@ namespace ZapretUpdater.Zapret.Lists
         public string Id => "domainlist";
         public string FileName => "list-general.txt";
 
-        private static ConcurrentHashSet<Uri> _urls = FTSInterpreter.ReadCode(
-@"@github#bol-van/rulist+reestr_hostname.txt
+        private static ConcurrentHashSet<Uri> _urls = [.. FTSInterpreter.ReadCode(
+@"@pastebin#SiLUnT9P
+@github#bol-van/rulist+reestr_hostname.txt
 https://antifilter.download/list/domains.lst
+@github#azzimoda/zapret-lists+list-general.txt
 https://iplist.opencck.org/?format=text&data=domains
 @github#Flowseal/zapret-discord-youtube+lists/list-general.txt
 @github#remittor/zapret-openwrt+zapret/ipset/zapret-hosts-user.txt+zap1
-@github#V3nilla/IPSets-For-Bypass-in-Russia+Список доменов для обхода/Сам список.txt");
+@github#V3nilla/IPSets-For-Bypass-in-Russia+Список доменов для обхода/Сам список.txt").SelectUri()];
 
         private static ConcurrentHashSet<string> set = [];
 

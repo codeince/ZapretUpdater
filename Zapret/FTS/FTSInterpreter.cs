@@ -33,6 +33,17 @@ namespace ZapretUpdater.Zapret.FTS
             return line;
         }
 
+        public static string ZipUri(Uri uri)
+        {
+            foreach (var handler in Handlers)
+            {
+                if (handler.CanZipUri(uri))
+                    return handler.ZipUri(uri);
+            }
+
+            return uri.ToString();
+        }
+
         public static IEnumerable<string> ReplaceIps(string line)
         {
             if (line.Contains("{ip}"))
@@ -45,7 +56,7 @@ namespace ZapretUpdater.Zapret.FTS
             }
         }
 
-        public static ConcurrentHashSet<Uri> ReadCode(string code, bool inverted = false)
+        public static ConcurrentHashSet<string> ReadCode(string code, bool inverted = false)
         {
             return code.Split(Environment.NewLine)
                 .WhereNotEmpty()
@@ -53,7 +64,6 @@ namespace ZapretUpdater.Zapret.FTS
                 .SelectMany(ReplaceIps)
                 .Select(url => ReadLine(url, inverted))
                 .WhereNotEmpty()
-                .SelectUri()
                 .ToConcurrentHashSet();
         }
 
