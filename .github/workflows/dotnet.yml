@@ -33,5 +33,5 @@ jobs:
         tag_name: "latest"
         make_latest: "true"
         files: |
-          ./publish/*/*
+          ./publish/*
         generate_release_notes: true
