@@ -1,0 +1,35 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 10.0.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build Windows
+      run: dotnet publish /p:PublishProfile=Win64Profile
+    - name: Build Linux
+      run: dotnet publish /p:PublishProfile=Linux64Profile
+    - name: Test
+      run: dotnet run --no-restore -p -s
+    - name: Creating release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+          ./publish/*/*
+        generate_release_notes: true
