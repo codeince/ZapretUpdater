@@ -30,7 +30,6 @@ jobs:
     - name: Creating release
       uses: softprops/action-gh-release@v2
       with:
-        if: github.ref_type == 'tag'
         make_latest: "true"
         files: |
           ./publish/*/*
