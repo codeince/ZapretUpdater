@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net10.0-windows</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <StartupObject>ZapretUpdater.Program</StartupObject>
@@ -13,10 +13,13 @@
     <PackAsTool>False</PackAsTool>
     <AssemblyVersion></AssemblyVersion>
     <FileVersion></FileVersion>
-    <Version>1.0.8</Version>
+    <Version>1.1.2</Version>
     <Authors>Code Slasher</Authors>
     <Company>Code Slasher Incorporation</Company>
     <Description>Program for updating Zapret's lists</Description>
+    <SignAssembly>False</SignAssembly>
+    <Title>Zapret Updater</Title>
+    <AnalysisLevel>none</AnalysisLevel>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

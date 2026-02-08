@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using System.Net.Http.Headers;
 using ZapretUpdater.Utils;
 using ZapretUpdater.Zapret.FTS;
 
@@ -10,44 +11,57 @@ namespace ZapretUpdater.Zapret.Lists
         /// Finds all extra sources in .sources file
         /// </summary>
         /// <param name="list">Current list</param>
-        public static void FindExtraSources(this IBaseList list)
+        public static void FindExtraSources(this IBaseList list, string data)
         {
-            var extraFileName = list.FileName.Replace(".txt", ".sources");
-            if (File.Exists(extraFileName))
+            data = data.ReplaceLineEndings().Trim();
+
+            var set = FTSInterpreter.GetUrls(data).ToConcurrentHashSet();
+            if (set.Count > 0)
             {
-                Console.WriteLine($"[{extraFileName}] Extra sources file found. Loading...");
-                var data = File.ReadAllText(extraFileName);
+                Console.WriteLine($"[{list.FileName} extras] {set.Count} extra values found.");
+                foreach (var url in set)
+                    list.Set.Add(url);
+            }
 
-                if (string.IsNullOrWhiteSpace(data))
-                {
-                    Console.WriteLine($"[WARNING] {extraFileName} is empty.");
-                }
-                else
-                {
-                    data = data.ReplaceLineEndings().Trim();
+            var values = FTSInterpreter.ReadCode(data).SelectUri().Except(list.Urls).ToList();
+            if (values.Count > 0)
+            {
+                Console.WriteLine($"[{list.FileName} extras] {values.Count} extra sources found.");
+                foreach (var url in values)
+                    list.Urls.Add(url);
+                list.Urls = [.. list.Urls.DistinctSet()];
+            }
 
-                    var values = FTSInterpreter.ReadCode(data).SelectUri().Except(list.Urls).ToList();
-                    if (values.Count > 0)
-                    {
-                        Console.WriteLine($"[{extraFileName}] {values.Count} extra sources found.");
-                        foreach (var url in values)
-                            list.Urls.Add(url);
-                        list.Urls = [.. list.Urls.DistinctSet()];
-                    }
+        }
 
-                    var AntiSources = FTSInterpreter.ReadCode(data, inverted: true).SelectUri().ToConcurrentHashSet();
-                    if (AntiSources.Count > 0)
-                    {
-                        Console.WriteLine($"[!{extraFileName}] {AntiSources.Count} anti-sources found. Loading and downloading...");
-                        IBaseList AntiList = new IpList();
-                        AntiList.Urls = AntiSources;
-                        AntiList.DownloadList();
-                        list.Set = [.. list.Set
+        /// <summary>
+        /// Finds all extra sources in .sources file
+        /// </summary>
+        /// <param name="list">Current list</param>
+        public static void FindAntiSources(this IBaseList list, string data)
+        {
+            data = data.ReplaceLineEndings().Trim();
+
+            var antiSet = FTSInterpreter.GetUrls(data, true).ToConcurrentHashSet();
+            if (antiSet.Count > 0)
+            {
+                Console.WriteLine($"[{list.FileName} extras] {antiSet.Count} anti-values found.");
+                list.Set = [.. list.Set
+                            .WhereNotEmpty()
+                            .SelectTrim()
+                            .Except(antiSet)];
+            }
+
+            var antiSources = FTSInterpreter.ReadCode(data, inverted: true).SelectUri().ToConcurrentHashSet();
+            if (antiSources.Count > 0)
+            {
+                Console.WriteLine($"[!{list.FileName} extras] {antiSources.Count} anti-sources found. Loading and downloading...");
+                IBaseList AntiList = new IpExtraList(list.Id, string.Join(Environment.NewLine, antiSources));
+                AntiList.DownloadList();
+                list.Set = [.. list.Set
                             .WhereNotEmpty()
                             .SelectTrim()
                             .Except(AntiList.Set)];
-                    }
-                }
             }
         }
 
@@ -91,7 +105,18 @@ namespace ZapretUpdater.Zapret.Lists
         /// <returns></returns>
         public static async Task DownloadUrl(this IBaseList list, Uri url)
         {
-            using HttpClient httpclient = new();
+            using HttpClient httpclient = new(new HttpClientHandler()
+            {
+                AllowAutoRedirect = true,
+                UseCookies = true,
+            });
+
+            var random = new Random();
+
+            var userAgent = new ProductInfoHeaderValue("Gecko", $"{random.Next()}");
+            var comment = new ProductInfoHeaderValue("Firefox", "140.0");
+            httpclient.DefaultRequestHeaders.UserAgent.Add(userAgent);
+            httpclient.DefaultRequestHeaders.UserAgent.Add(comment);
 
             try
             {
@@ -138,6 +163,7 @@ Got error: {e.Message}");
         /// <param name="list">Current list</param>
         public static void DownloadList(this IBaseList list)
         {
+            list.Urls = [.. list.Urls.DistinctBy(url => url.AbsoluteUri)];
             Parallel.ForEachAsync(list.Urls, async (url, _) =>
             {
                 await list.DownloadUrl(url);
@@ -149,26 +175,33 @@ Got error: {e.Message}");
         /// Saves list to file
         /// </summary>
         /// <param name="list">Current list</param>
-        public static void SaveToFile(this IBaseList list)
+        public async static void SaveToFile(this IBaseList list)
         {
             if (list.Set.Count > 0)
             {
-                if (list.Id.StartsWith("domain"))
-                    list.Set = [.. list.Set.SelectHosts()];
-                else
+                if (list.Id.StartsWith("ip"))
+                {
                     list.Set = [.. list.Set.Except(list.Set.SelectHosts())];
 
-                if (list.Id == new IpList().Id)
-                    list.Set.Remove("203.0.113.113/32");
+                    if (list.Id == new IpList().Id)
+                    {
+                        list.Set = [.. list.Set.Except(["203.0.113.113/32"])];
+                    }
+
+                }
+                else if (list.Id.StartsWith("domain"))
+                {
+                    list.Set = [.. list.Set.SelectHosts()];
+                }
 
                 list.Set.Add(Environment.NewLine);
                 list.Set = [.. list.Set
-                    .WhereNotEmpty()
-                    .WhereNotComment()
-                    .SelectTrim()
-                    .Distinct()];
+                        .WhereNotEmpty()
+                        .WhereNotComment()
+                        .SelectTrim()
+                        .Distinct()];
 
-                File.WriteAllLines(list.FileName, list.Set.ToImmutableSortedSet());
+                await File.WriteAllLinesAsync(list.FileName, list.Set.ToImmutableSortedSet());
             }
         }
     }

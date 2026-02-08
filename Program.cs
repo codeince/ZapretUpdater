@@ -1,5 +1,4 @@
 ﻿using ZapretUpdater.Zapret;
-using ZapretUpdater.Zapret.Lists;
 
 namespace ZapretUpdater
 {
@@ -7,33 +6,32 @@ namespace ZapretUpdater
     {
         static void Main(string[] args)
         {
-            Directory.EnumerateFiles(".", "list-*.sources").ToList().ForEach(sourcePath =>
-            {
-                var filename = sourcePath.Replace(".\\", "").ToLower().Trim().Replace(".sources", ".txt");
-                if (!ZapretManager.DomainLists.Select(x => x.FileName).Contains(filename))
-                {
-                    var content = File.ReadAllText(sourcePath);
-                    ZapretManager.DomainLists.Add(new DomainExtraList(filename, content));
-                }
-            });
-            Directory.EnumerateFiles(".", "ipset-*.sources").ToList().ForEach(sourcePath =>
-            {
-                var filename = sourcePath.Replace(".\\", "").ToLower().Trim().Replace(".sources", ".txt");
-                if (!ZapretManager.IpLists.Select(x => x.FileName).Contains(filename))
-                {
-                    var content = File.ReadAllText(sourcePath);
-                    ZapretManager.IpLists.Add(new IpExtraList(filename, content));
-                }
-            });
+            bool loadLists = !(args.Contains("-n") | args.Contains("--new"));
+            bool ask = !(args.Contains("-s") || args.Contains("--skip-asking"));
 
-            ZapretManager.LoadAllLists();
+            if (loadLists)
+            {
+                string? choice = "y";
+                if (ask)
+                {
+                    Console.WriteLine("Read the lists(yes/no)?");
+                    choice = Console.ReadLine();
+                }
+
+                if (string.IsNullOrEmpty(choice) || choice.StartsWith('y'))
+                    ZapretManager.LoadAllLists();
+            }
+
             ZapretManager.FindExtraSources();
             ZapretManager.DownloadAllLists();
+            ZapretManager.FindAntiSources();
             ZapretManager.SaveAllLists();
 
-            if (args.Contains("-p")) return;
+            if (args.Contains("-p") || args.Contains("--pause")) return;
+
             Console.Write("Нажмите любую клавишу для продолжения...");
             _ = Console.Read();
+
         }
     }
 }

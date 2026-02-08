@@ -13,11 +13,15 @@ namespace ZapretUpdater.Zapret.Lists
 https://antifilter.download/list/ipresolve.lst
 https://antifilter.download/list/allyouneed.lst
 https://iplist.opencck.org/?format=text&data=cidr{ip}
+https://community.antifilter.download/list/community.lst
+https://github.com/1andrevich/Re-filter-lists/releases/latest/download/ipsum.lst
 @github#bol-van/rulist+reestr_smart{ip}.txt
+@github#1andrevich/Re-filter-lists+ipsum.lst
 @github#sch-izo/shizapret+.service/ipset-all.txt
+@github#1andrevich/Re-filter-lists+discord_ips.lst
+@github#1andrevich/Re-filter-lists+community_ips.lst
 @github#V3nilla/IPSets-For-Bypass-in-Russia+ipset-all.txt
-@github#Flowseal/zapret-discord-youtube+.service/ipset-service.txt
-@github#V3nilla/IPSets-For-Bypass-in-Russia+Разблокировка множества сервисов(пример - ChatGPT)/Адреса для zapret под Instagram.txt").SelectUri()];
+@github#Flowseal/zapret-discord-youtube+.service/ipset-service.txt").SelectUri()];
 
         private static ConcurrentHashSet<string> set = [];
 

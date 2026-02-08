@@ -67,6 +67,29 @@ namespace ZapretUpdater.Zapret.FTS
                 .ToConcurrentHashSet();
         }
 
+        public static IEnumerable<String> GetUrls(string code, bool inverted = false)
+        {
+            return code.Split(Environment.NewLine)
+                .WhereNotEmpty()
+                .SelectTrim()
+                .SelectMany(ReplaceIps)
+                .WhereNotEmpty()
+                .Select(url =>
+                {
+                    if (url.StartsWith('>'))
+                    {
+                        url = url[1..];
+                        if (inverted)
+                            if (url.StartsWith('!'))
+                                url = url[1..];
+                            else
+                                return url;
+                    }
+                    return string.Empty;
+                })
+                .WhereNotEmpty();
+        }
+
 
         public static IHandler? GetHandlerById(string id)
         {

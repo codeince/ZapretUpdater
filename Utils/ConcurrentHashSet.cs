@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 
 namespace ZapretUpdater.Utils
 {
-    public class ConcurrentHashSet<T>: IEnumerable<T> where T : notnull
+    public class ConcurrentHashSet<T> : IEnumerable<T> where T : notnull
     {
         private readonly ConcurrentDictionary<T, byte> _dictionary;
         public ConcurrentHashSet()
@@ -24,9 +24,17 @@ namespace ZapretUpdater.Utils
         {
             return _dictionary.TryAdd(item, 0);
         }
+        public IEnumerable<T> Distinct()
+        {
+            return _dictionary.Keys.Distinct();
+        }
         public bool Remove(T item)
         {
             return _dictionary.TryRemove(item, out _);
+        }
+        public IEnumerable<T> Except(IEnumerable<T> items)
+        {
+            return _dictionary.Keys.Except(items);
         }
         public bool Contains(T item)
         {

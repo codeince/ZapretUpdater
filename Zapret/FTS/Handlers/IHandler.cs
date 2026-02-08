@@ -2,7 +2,7 @@
 {
     public interface IHandler
     {
-        string Id { get;}
+        string Id { get; }
         int ArgumentCount { get; }
 
         Uri GetUri(string[] arguments);

@@ -2,7 +2,7 @@
 
 namespace ZapretUpdater.Zapret.FTS.Handlers
 {
-    public class PastebinHandler: IHandler
+    public class PastebinHandler : IHandler
     {
         public string Id => "pastebin";
         public int ArgumentCount => 1;
