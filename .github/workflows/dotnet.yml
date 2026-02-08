@@ -34,4 +34,3 @@ jobs:
         make_latest: "true"
         files: |
           ./publish/*
-        generate_release_notes: true
