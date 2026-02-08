@@ -26,7 +26,7 @@ jobs:
     - name: Build Linux
       run: dotnet publish /p:PublishProfile=Linux64Profile
     - name: Test
-      run: dotnet run --no-restore -p -s
+      run: dotnet run --no-restore -- -p -s
     - name: Creating release
       uses: softprops/action-gh-release@v2
       with:
