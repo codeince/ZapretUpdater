@@ -32,8 +32,9 @@ jobs:
     - name: Creating release
       uses: softprops/action-gh-release@v2
       with:
+        tag_name: "latest"
         make_latest: "true"
-        generate_release_notes: "true"
         files: |
           ./bin/Release/net10.0/publish/*/ZapretUpdater*
+        generate_release_notes: "true"
         
