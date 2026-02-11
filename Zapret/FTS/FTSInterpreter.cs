@@ -58,6 +58,7 @@ namespace ZapretUpdater.Zapret.FTS
 
         public static ConcurrentHashSet<string> ReadCode(string code, bool inverted = false)
         {
+            code = code.ReplaceLineEndings();
             return code.Split(Environment.NewLine)
                 .WhereNotEmpty()
                 .SelectTrim()
@@ -69,6 +70,7 @@ namespace ZapretUpdater.Zapret.FTS
 
         public static IEnumerable<String> GetUrls(string code, bool inverted = false)
         {
+            code = code.ReplaceLineEndings();
             return code.Split(Environment.NewLine)
                 .WhereNotEmpty()
                 .SelectTrim()

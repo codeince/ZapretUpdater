@@ -9,13 +9,15 @@ namespace ZapretUpdater.Zapret.Lists
         public string FileName => "list-exclude.txt";
 
         private static ConcurrentHashSet<Uri> _urls = [.. FTSInterpreter.ReadCode(
-@"@pastebin#iTqfMKc0
+@"
+@pastebin#iTqfMKc0
 @github#sch-izo/shizapret+lists/list-exclude.txt
 @github#HotCakeX/MicrosoftDomains+Microsoft%20Domains.txt
 @github#hxehex/russia-mobile-internet-whitelist+whitelist.txt
 @github#Flowseal/zapret-discord-youtube+lists/list-exclude.txt
 @github#V3nilla/IPSets-For-Bypass-in-Russia+exclude-domains.txt
-@github#remittor/zapret-openwrt+zapret/ipset/zapret-hosts-user-exclude.txt+zap1").SelectUri()];
+@github#remittor/zapret-openwrt+zapret/ipset/zapret-hosts-user-exclude.txt+zap1
+").SelectUri()];
 
         private static ConcurrentHashSet<string> set = [];
 

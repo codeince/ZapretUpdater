@@ -9,7 +9,8 @@ namespace ZapretUpdater.Zapret.Lists
         public string FileName => "list-general.txt";
 
         private static ConcurrentHashSet<Uri> _urls = [.. FTSInterpreter.ReadCode(
-@"@pastebin#SiLUnT9P
+@"
+@pastebin#SiLUnT9P
 https://antifilter.download/list/domains.lst
 https://iplist.opencck.org/?format=text&data=domains
 https://community.antifilter.download/list/domains.lst
@@ -22,7 +23,8 @@ https://github.com/1andrevich/Re-filter-lists/releases/latest/download/domains_a
 @github#Flowseal/zapret-discord-youtube+lists/list-general.txt
 @github#remittor/zapret-openwrt+zapret/ipset/zapret-hosts-user.txt+zap1
 @github#V3nilla/IPSets-For-Bypass-in-Russia+Список доменов для обхода/Сам список.txt
-@github#V3nilla/IPSets-For-Bypass-in-Russia+Разблокировка множества сервисов(пример - ChatGPT)/Адреса для zapret под Instagram.txt").SelectUri()];
+@github#V3nilla/IPSets-For-Bypass-in-Russia+Разблокировка множества сервисов(пример - ChatGPT)/Адреса для zapret под Instagram.txt
+").SelectUri()];
 
         private static ConcurrentHashSet<string> set = [];
 
