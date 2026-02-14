@@ -12,11 +12,17 @@ namespace ZapretUpdater.Zapret.FTS
         };
         private static string ReadLine(string line, bool inverted = false)
         {
-            if (!inverted && line.StartsWith("@!")) return string.Empty;
-
-            if (inverted ? line.StartsWith("@!") : line.StartsWith('@'))
+            if (line.StartsWith('@'))
             {
-                var handlerId = line.StartsWith("@!") ? line[2..line.IndexOf('#')] : line[1..line.IndexOf('#')];
+                line = line[1..];
+                if (!inverted == line.StartsWith('!')) return string.Empty;
+
+                if (inverted)
+                {
+                    line = line[1..];
+                }
+
+                var handlerId = line[..line.IndexOf('#')];
                 var argumentsPart = line[(line.IndexOf('#') + 1)..].Split('+')
                         .SelectTrim()
                         .ToArray();
@@ -68,7 +74,7 @@ namespace ZapretUpdater.Zapret.FTS
                 .ToConcurrentHashSet();
         }
 
-        public static IEnumerable<String> GetUrls(string code, bool inverted = false)
+        public static IEnumerable<string> GetUrls(string code, bool inverted = false)
         {
             code = code.ReplaceLineEndings();
             return code.Split(Environment.NewLine)
@@ -76,18 +82,19 @@ namespace ZapretUpdater.Zapret.FTS
                 .SelectTrim()
                 .SelectMany(ReplaceIps)
                 .WhereNotEmpty()
+                .Where(x => x.StartsWith('>'))
                 .Select(url =>
                 {
-                    if (url.StartsWith('>'))
+                    url = url[1..];
+                    
+                    if (!inverted == url.StartsWith('!')) return string.Empty;
+
+                    if (inverted)
                     {
                         url = url[1..];
-                        if (inverted)
-                            if (url.StartsWith('!'))
-                                url = url[1..];
-                            else
-                                return url;
                     }
-                    return string.Empty;
+
+                    return url;
                 })
                 .WhereNotEmpty();
         }

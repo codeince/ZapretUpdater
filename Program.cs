@@ -9,7 +9,7 @@ namespace ZapretUpdater
             bool loadLists = !(args.Contains("-n") | args.Contains("--new"));
             bool ask = !(args.Contains("-s") || args.Contains("--skip-asking"));
 
-            if (loadLists)
+            if (loadLists && Directory.EnumerateFiles(".", "*.txt").Count() > 0)
             {
                 string? choice = "y";
                 if (ask)
