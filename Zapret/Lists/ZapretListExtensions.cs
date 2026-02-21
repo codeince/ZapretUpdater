@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Net.Http.Headers;
 using ZapretUpdater.Utils;
+using ZapretUpdater.Zapret.Api;
 using ZapretUpdater.Zapret.FTS;
 
 namespace ZapretUpdater.Zapret.Lists
@@ -108,8 +109,14 @@ namespace ZapretUpdater.Zapret.Lists
             using HttpClient httpclient = new(new HttpClientHandler()
             {
                 AllowAutoRedirect = true,
-                UseCookies = true,
+                UseCookies = false,
             });
+
+            foreach (var apiType in KeyContainer.ApiKeys.Keys)
+            {
+                if (url.DnsSafeHost.Split('.').Contains(apiType, StringComparer.InvariantCultureIgnoreCase))
+                    httpclient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", KeyContainer.ApiKeys[apiType]);
+            }
 
             var random = new Random();
 

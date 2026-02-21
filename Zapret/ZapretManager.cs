@@ -10,6 +10,7 @@ namespace ZapretUpdater.Zapret
 
         public static List<IBaseList> Lists { get => [.. IpLists.Concat(DomainLists)]; }
 
+
         /// <summary>
         /// Loads all lists if files are exists
         /// </summary>

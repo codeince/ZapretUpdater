@@ -1,4 +1,5 @@
 ﻿using ZapretUpdater.Zapret;
+using ZapretUpdater.Zapret.Api;
 
 namespace ZapretUpdater
 {
@@ -6,6 +7,8 @@ namespace ZapretUpdater
     {
         static void Main(string[] args)
         {
+            KeyContainer.GetApiKeys();
+
             bool loadLists = !(args.Contains("-n") | args.Contains("--new"));
             bool ask = !(args.Contains("-s") || args.Contains("--skip-asking"));
 
