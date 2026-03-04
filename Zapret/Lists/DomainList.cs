@@ -10,7 +10,7 @@ namespace ZapretUpdater.Zapret.Lists
 
         private static ConcurrentHashSet<Uri> _urls = [.. FTSInterpreter.ReadCode(
 @"
-@pastebin#SiLUnT9P
+@github#CodeGameSlasher/ZapretExtraLists+include/domains/clouds.txt
 https://antifilter.download/list/domains.lst
 https://iplist.opencck.org/?format=text&data=domains
 https://community.antifilter.download/list/domains.lst
