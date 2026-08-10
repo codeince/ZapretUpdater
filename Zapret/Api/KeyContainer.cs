@@ -13,7 +13,7 @@ namespace ZapretUpdater.Zapret.Api
 
             if (!string.IsNullOrEmpty(apiKey))
             {
-                Console.WriteLine($"Загружен api ключ для {apiType}");
+                Console.WriteLine($"Loaded API key for {apiType}");
                 ApiKeys.TryAdd(apiType, apiKey);
             }
         }

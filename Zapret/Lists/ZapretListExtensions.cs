@@ -121,7 +121,7 @@ namespace ZapretUpdater.Zapret.Lists
             var random = new Random();
 
             var userAgent = new ProductInfoHeaderValue("Gecko", $"{random.Next()}");
-            var comment = new ProductInfoHeaderValue("Firefox", "140.0");
+            var comment = new ProductInfoHeaderValue("Firefox", "143.0");
             httpclient.DefaultRequestHeaders.UserAgent.Add(userAgent);
             httpclient.DefaultRequestHeaders.UserAgent.Add(comment);
 

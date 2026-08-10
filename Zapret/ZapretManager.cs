@@ -10,6 +10,13 @@ namespace ZapretUpdater.Zapret
 
         public static List<IBaseList> Lists { get => [.. IpLists.Concat(DomainLists)]; }
 
+        /// <summary>
+        /// Clears all lists(ip and domain)
+        /// </summary>
+        public static void ClearLists() { 
+            IpLists.Clear();
+            DomainLists.Clear();
+        }
 
         /// <summary>
         /// Loads all lists if files are exists
@@ -80,6 +87,12 @@ namespace ZapretUpdater.Zapret
         /// </summary>
         public static void DownloadAllLists()
         {
+            if (Lists.Count == 0)
+            {
+                Console.WriteLine("Lists are empty!");
+                return;
+            }
+
             Lists.AsParallel().ForAll(list => list.DownloadList());
 
             IpLists[0].Set = [.. IpLists[0].Set.Except(

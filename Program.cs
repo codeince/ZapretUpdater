@@ -9,8 +9,13 @@ namespace ZapretUpdater
         {
             KeyContainer.GetApiKeys();
 
-            bool loadLists = !(args.Contains("-n") | args.Contains("--new"));
+            bool loadLists = !(args.Contains("-n") || args.Contains("--new"));
             bool ask = !(args.Contains("-s") || args.Contains("--skip-asking"));
+            bool clearDefault = args.Contains("-c") || args.Contains("--clear-default");
+
+            if (clearDefault) {
+                ZapretManager.ClearLists();
+            }
 
             if (loadLists && Directory.EnumerateFiles(".", "*.txt").Count() > 0)
             {
@@ -32,7 +37,7 @@ namespace ZapretUpdater
 
             if (args.Contains("-p") || args.Contains("--pause")) return;
 
-            Console.Write("Нажмите любую клавишу для продолжения...");
+            Console.Write("Press any button to continue...");
             _ = Console.Read();
 
         }
