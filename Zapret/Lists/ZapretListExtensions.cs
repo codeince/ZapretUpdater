@@ -1,8 +1,8 @@
-﻿using System.Collections.Immutable;
-using System.Net.Http.Headers;
-using ZapretUpdater.Utils;
+﻿using ZapretUpdater.Utils;
 using ZapretUpdater.Zapret.Api;
 using ZapretUpdater.Zapret.FTS;
+using System.Net.Http.Headers;
+using System.Collections.Immutable;
 
 namespace ZapretUpdater.Zapret.Lists
 {
@@ -208,7 +208,21 @@ Got error: {e.Message}");
                         .SelectTrim()
                         .Distinct()];
 
-                await File.WriteAllLinesAsync(list.FileName, list.Set.ToImmutableSortedSet());
+                if (list.Set.Count == 0)
+                {
+                    Console.WriteLine($"List {list.FileName} is empty!\nSkipping...");
+                    return;
+                }
+
+                ImmutableSortedSet<string> sortedSet = [.. list.Set];
+                await File.WriteAllLinesAsync(list.FileName, sortedSet);
+
+                string userPath = $"{Path.GetFileNameWithoutExtension(list.FileName)}-user.{Path.GetExtension(list.FileName)}";
+                if (Path.Exists(userPath))
+                {
+                    Console.WriteLine($"List {userPath} was found!");
+                    await File.WriteAllLinesAsync(userPath, sortedSet);
+                }
             }
         }
     }
