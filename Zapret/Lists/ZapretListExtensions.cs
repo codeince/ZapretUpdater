@@ -121,7 +121,7 @@ namespace ZapretUpdater.Zapret.Lists
             var random = new Random();
 
             var userAgent = new ProductInfoHeaderValue("Gecko", $"{random.Next()}");
-            var comment = new ProductInfoHeaderValue("Firefox", "143.0");
+            var comment = new ProductInfoHeaderValue("Firefox", "155.0");
             httpclient.DefaultRequestHeaders.UserAgent.Add(userAgent);
             httpclient.DefaultRequestHeaders.UserAgent.Add(comment);
 
@@ -217,7 +217,7 @@ Got error: {e.Message}");
                 ImmutableSortedSet<string> sortedSet = [.. list.Set];
                 await File.WriteAllLinesAsync(list.FileName, sortedSet);
 
-                string userPath = $"{Path.GetFileNameWithoutExtension(list.FileName)}-user.{Path.GetExtension(list.FileName)}";
+                string userPath = $"{Path.GetFileNameWithoutExtension(list.FileName)}-user{Path.GetExtension(list.FileName)}";
                 if (Path.Exists(userPath))
                 {
                     Console.WriteLine($"List {userPath} was found!");

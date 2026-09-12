@@ -13,7 +13,8 @@ namespace ZapretUpdater
             bool ask = !(args.Contains("-s") || args.Contains("--skip-asking"));
             bool clearDefault = args.Contains("-c") || args.Contains("--clear-default");
 
-            if (clearDefault) {
+            if (clearDefault)
+            {
                 ZapretManager.ClearLists();
             }
 
