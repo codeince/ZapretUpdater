@@ -55,7 +55,9 @@
 2. Скачиваем [архив с проектом](/archive/refs/heads/main.zip)
 3. Распаковываем в пустую папку
 4. Открываем командную строку
-5. Вписываем `dotnet publish /p:PublishProfile=`, а дальше профиль(без пробелов и других знаков)
-    * Win64Profile - собирает в один файл под 64-битную Windows
-    * Linux64Profile - собирает в один файл под 64-битный Linux
+5. Вписываем `dotnet publish -r {os} --self-contained=false /p:PublishSingleFile=true`, вместо {os} нужно вписать ОС
+
+    * `win-x64` - собирает в один файл под 64-битную Windows
+    * `linux-x64` - собирает в один файл под 64-битный Linux
+
 6. В подпапке `bin\Release\net10.0\publish\ваша_ОС` будет лежать готовый Zapret Updater

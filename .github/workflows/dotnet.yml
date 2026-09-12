@@ -21,20 +21,18 @@ jobs:
       uses: actions/setup-dotnet@v6
       with:
         dotnet-version: 10.0.x
-    - name: Restore dependencies
-      run: dotnet restore
-    - name: Build Windows
-      run: dotnet publish /p:PublishProfile=Win64Profile
-    - name: Build Linux
-      run: dotnet publish /p:PublishProfile=Linux64Profile
     - name: Test
       run: dotnet run --no-restore -- -p -s
+    - name: Build Windows
+      run: dotnet publish -r win-x64 --self-contained=false /p:PublishSingleFile=true
+    - name: Build Linux
+      run: dotnet publish -r linux-x64 --self-contained=false /p:PublishSingleFile=true
     - name: Creating release
       uses: softprops/action-gh-release@v3
       with:
         tag_name: "beta"
         prerelease: "true"
         files: |
-          ./bin/Release/net10.0/publish/*/ZapretUpdater*
+          ./bin/Release/net10.0/*/publish/ZapretUpdater*
         generate_release_notes: "true"
         
