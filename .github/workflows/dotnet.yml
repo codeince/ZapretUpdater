@@ -24,9 +24,9 @@ jobs:
     - name: Test
       run: dotnet run -- -p -s
     - name: Build Windows
-      run: dotnet publish -r win-x64 --self-contained=false --no-restore /p:PublishSingleFile=true
+      run: dotnet publish -r win-x64 --self-contained=false /p:PublishSingleFile=true
     - name: Build Linux
-      run: dotnet publish -r linux-x64 --self-contained=false --no-restore /p:PublishSingleFile=true
+      run: dotnet publish -r linux-x64 --self-contained=false /p:PublishSingleFile=true
     - name: Creating release
       uses: softprops/action-gh-release@v3
       with:
