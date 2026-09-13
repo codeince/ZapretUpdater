@@ -14,7 +14,6 @@ jobs:
     strategy:
       matrix:
         OS: [linux-x64, win-x64]
-        SELF_CONTAINED: [true, false]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -31,15 +30,16 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget-
-      - name: Build ${{matrix.OS}}${{matrix.SELF_CONTAINED && ' self-contained'}}
-        run: dotnet publish -r ${{matrix.OS}} --self-contained=${{matrix.SELF_CONTAINED}} /p:PublishSingleFile=true
+      - name: Build ${{matrix.OS}} Contained
+        run: dotnet publish -r ${{matrix.OS}} /p:PublishSingleFile=true
       - name: Rename self-contained file
-        if: ${{ matrix.SELF_CONTAINED == true }}
         run: mv ./bin/Release/net10.0/${{matrix.OS}}/publish/ZapretUpdater${{matrix.OS == 'win-x64' && '.exe' || ''}} ./bin/Release/net10.0/${{matrix.OS}}/publish/ZapretUpdater-Contained${{matrix.OS == 'win-x64' && '.exe' || ''}}
+      - name: Build ${{matrix.OS}}
+        run: dotnet publish -r ${{matrix.OS}} --self-contained=false /p:PublishSingleFile=true
       - name: Upload release artifact
         uses: actions/upload-artifact@v7
         with:
-          name: build-${{matrix.SELF_CONTAINED}}${{matrix.SELF_CONTAINED == true && '-contained' || ''}}
+          name: build-${{matrix.OS}}
           path: bin/Release/net10.0/${{matrix.OS}}/publish/ZapretUpdater**
 
   release:
