@@ -13,7 +13,6 @@ namespace ZapretUpdater.Zapret.Lists
 @github#remittor/zapret-openwrt+zapret/ipset/zapret-hosts-google.txt+zap1
 @github#Flowseal/zapret-discord-youtube+lists/list-google.txt
 @github#sch-izo/shizapret+lists/list-google.txt
-dl.google.com
 ").SelectUri()];
         private static ConcurrentHashSet<string> set = [];
 
