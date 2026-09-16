@@ -81,6 +81,12 @@ jobs:
           merge-multiple: true
           path: artifacts
       - name: Create GitHub Release
-        run: gh release create "${{steps.version.outputs.VERSION}}-${{github.run_id}}" artifacts/* --prerelease --generate-notes -R ${{ github.repository }}
+        run: |
+          tag="${{steps.version.outputs.VERSION}}"
+          if gh release view "$tag" >/dev/null 2>&1; then
+              tag="${tag}.${{github.run_id}}"
+          fi
+
+          gh release create "$tag" artifacts/* --prerelease --generate-notes -R ${{ github.repository }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
