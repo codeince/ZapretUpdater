@@ -13,7 +13,7 @@
     <PackAsTool>False</PackAsTool>
     <AssemblyVersion></AssemblyVersion>
     <FileVersion></FileVersion>
-    <Version>1.1.7</Version>
+    <Version>1.1.8</Version>
     <Authors>Code Slasher</Authors>
     <Company>Code Slasher Incorporation</Company>
     <Description>Program for updating Zapret's lists</Description>
@@ -29,12 +29,6 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <DebugType>embedded</DebugType>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="list-general.sources_roblox" />
-    <None Remove="Roblox.zip" />
-    <None Remove="Warframe.zip" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="icon.ico" />

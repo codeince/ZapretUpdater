@@ -1,6 +1,9 @@
-﻿namespace ZapretUpdater.Utils
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
+
+namespace ZapretUpdater.Utils
 {
-    public static class EnumerableExtensions
+    public static partial class EnumerableExtensions
     {
         public static IEnumerable<string> WhereNotEmpty(this IEnumerable<string> list)
         {

@@ -3,6 +3,8 @@ using ZapretUpdater.Zapret.Api;
 using ZapretUpdater.Zapret.FTS;
 using System.Net.Http.Headers;
 using System.Collections.Immutable;
+using System.Collections;
+using System.Security.Cryptography.X509Certificates;
 
 namespace ZapretUpdater.Zapret.Lists
 {
@@ -12,6 +14,7 @@ namespace ZapretUpdater.Zapret.Lists
         /// Finds all extra sources in .sources file
         /// </summary>
         /// <param name="list">Current list</param>
+        /// <param name="data">Sources data</param>
         public static void FindExtraSources(this IBaseList list, string data)
         {
             data = data.ReplaceLineEndings().Trim();
@@ -39,6 +42,7 @@ namespace ZapretUpdater.Zapret.Lists
         /// Finds all extra sources in .sources file
         /// </summary>
         /// <param name="list">Current list</param>
+        /// <param name="data">Anti-sources data</param>
         public static void FindAntiSources(this IBaseList list, string data)
         {
             data = data.ReplaceLineEndings().Trim();
@@ -214,7 +218,7 @@ Got error: {e.Message}");
                     return;
                 }
 
-                ImmutableSortedSet<string> sortedSet = [.. list.Set];
+                ImmutableSortedSet<string> sortedSet = ImmutableSortedSet.CreateRange(new NaturalComparer(), list.Set);
                 await File.WriteAllLinesAsync(list.FileName, sortedSet);
 
                 string userPath = $"{Path.GetFileNameWithoutExtension(list.FileName)}-user{Path.GetExtension(list.FileName)}";

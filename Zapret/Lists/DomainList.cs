@@ -14,13 +14,12 @@ https://p.thenewone.lol/domains-export.txt
 https://antifilter.download/list/domains.lst
 https://iplist.opencck.org/?format=text&data=domains
 https://community.antifilter.download/list/domains.lst
-https://github.com/1andrevich/Re-filter-lists/releases/latest/download/domains_all.lst
 @github#bol-van/rulist+reestr_hostname.txt
 @github#azzimoda/zapret-lists+list-general-user.txt
 @github#1andrevich/Re-filter-lists+community.lst
 @github#1andrevich/Re-filter-lists+domains_all.lst
 @github#1andrevich/Re-filter-lists+ooni_domains.lst
-@github#CodeGameSlasher/ZapretExtraLists+include/all.txt
+@github#CodeGameSlasher/ZapretExtraLists+include/domains.txt
 @github#Flowseal/tg-ws-proxy+.github/cfproxy-domains.txt
 @github#Flowseal/zapret-discord-youtube+lists/list-general.txt
 @github#remittor/zapret-openwrt+zapret/ipset/zapret-hosts-user.txt+zap1
