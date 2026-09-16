@@ -69,7 +69,6 @@ jobs:
         shell: bash
         run: |
           VERSION=$(dotnet msbuild "${{env.NAME}}.csproj" \
-            -target:GetPackageVersion \
             -getProperty:Version \
             -nologo \
             -v:q)
