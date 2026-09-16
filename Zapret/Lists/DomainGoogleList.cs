@@ -12,9 +12,8 @@ namespace ZapretUpdater.Zapret.Lists
 @"
 @github#remittor/zapret-openwrt+zapret/ipset/zapret-hosts-google.txt+zap1
 @github#Flowseal/zapret-discord-youtube+lists/list-google.txt
->dl.google.com
 ").SelectUri()];
-        private static ConcurrentHashSet<string> set = [];
+        private static ConcurrentHashSet<string> set = ["dl.google.com"];
 
         ConcurrentHashSet<Uri> IBaseList.Urls { get => _urls; set => _urls = value; }
         ConcurrentHashSet<string> IBaseList.Set { get => set; set => set = value; }

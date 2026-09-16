@@ -125,7 +125,7 @@ namespace ZapretUpdater.Zapret.Lists
             var random = new Random();
 
             var userAgent = new ProductInfoHeaderValue("Gecko", $"{random.Next()}");
-            var comment = new ProductInfoHeaderValue("Firefox", "155.0");
+            var comment = new ProductInfoHeaderValue("Firefox", "156.0");
             httpclient.DefaultRequestHeaders.UserAgent.Add(userAgent);
             httpclient.DefaultRequestHeaders.UserAgent.Add(comment);
 
@@ -219,13 +219,18 @@ Got error: {e.Message}");
                 }
 
                 ImmutableSortedSet<string> sortedSet = ImmutableSortedSet.CreateRange(new NaturalComparer(), list.Set);
-                await File.WriteAllLinesAsync(list.FileName, sortedSet);
+                string content = string.Join('\n', sortedSet);
+                using (StreamWriter file = File.CreateText(list.FileName))
+                {
+                    await file.WriteLineAsync(content);
+                }
 
                 string userPath = $"{Path.GetFileNameWithoutExtension(list.FileName)}-user{Path.GetExtension(list.FileName)}";
                 if (Path.Exists(userPath))
                 {
                     Console.WriteLine($"List {userPath} was found!");
-                    await File.WriteAllLinesAsync(userPath, sortedSet);
+                    using StreamWriter file = File.CreateText(userPath);
+                    await file.WriteLineAsync(content);
                 }
             }
         }
