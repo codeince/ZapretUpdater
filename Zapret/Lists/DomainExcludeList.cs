@@ -10,12 +10,11 @@ namespace ZapretUpdater.Zapret.Lists
 
         private static ConcurrentHashSet<Uri> _urls = [.. FTSInterpreter.ReadCode(
 @"
-@github#CodeGameSlasher\ZapretExtraLists+exclude\domains.txt
+@github#CodeGameSlasher/ZapretExtraLists+exclude/domains.txt
 @github#HotCakeX/MicrosoftDomains+Microsoft%20Domains.txt
 @github#hxehex/russia-mobile-internet-whitelist+whitelist.txt
 @github#Flowseal/zapret-discord-youtube+lists/list-exclude.txt
 @github#V3nilla/IPSets-For-Bypass-in-Russia+exclude-domains.txt
-@github#CodeGameSlasher/ZapretExtraLists+exclude/domains/vs.txt
 @github#remittor/zapret-openwrt+zapret/ipset/zapret-hosts-user-exclude.txt+zap1
 ").SelectUri()];
 

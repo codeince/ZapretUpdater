@@ -3,8 +3,6 @@ using ZapretUpdater.Zapret.Api;
 using ZapretUpdater.Zapret.FTS;
 using System.Net.Http.Headers;
 using System.Collections.Immutable;
-using System.Collections;
-using System.Security.Cryptography.X509Certificates;
 
 namespace ZapretUpdater.Zapret.Lists
 {
@@ -222,7 +220,7 @@ Got error: {e.Message}");
                 string content = string.Join('\n', sortedSet);
                 using (StreamWriter file = File.CreateText(list.FileName))
                 {
-                    await file.WriteLineAsync(content);
+                    await file.WriteAsync(content);
                 }
 
                 string userPath = $"{Path.GetFileNameWithoutExtension(list.FileName)}-user{Path.GetExtension(list.FileName)}";
@@ -230,7 +228,7 @@ Got error: {e.Message}");
                 {
                     Console.WriteLine($"List {userPath} was found!");
                     using StreamWriter file = File.CreateText(userPath);
-                    await file.WriteLineAsync(content);
+                    await file.WriteAsync(content);
                 }
             }
         }

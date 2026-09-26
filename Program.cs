@@ -1,4 +1,6 @@
-﻿using ZapretUpdater.Zapret;
+﻿#nullable enable
+
+using ZapretUpdater.Zapret;
 using ZapretUpdater.Zapret.Api;
 
 namespace ZapretUpdater

@@ -1,5 +1,4 @@
-﻿
-using ZapretUpdater.Utils;
+﻿using ZapretUpdater.Utils;
 
 namespace ZapretUpdater.Zapret.FTS.Handlers
 {

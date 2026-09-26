@@ -1,4 +1,6 @@
-﻿using ZapretUpdater.Utils;
+﻿#nullable enable
+
+using ZapretUpdater.Utils;
 using ZapretUpdater.Zapret.FTS.Handlers;
 
 namespace ZapretUpdater.Zapret.FTS
@@ -86,7 +88,7 @@ namespace ZapretUpdater.Zapret.FTS
                 .Select(url =>
                 {
                     url = url[1..];
-                    
+
                     if (!inverted == url.StartsWith('!')) return string.Empty;
 
                     if (inverted)

@@ -13,7 +13,8 @@ namespace ZapretUpdater.Zapret
         /// <summary>
         /// Clears all lists(ip and domain)
         /// </summary>
-        public static void ClearLists() { 
+        public static void ClearLists()
+        {
             IpLists.Clear();
             DomainLists.Clear();
         }
